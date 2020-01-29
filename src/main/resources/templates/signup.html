@@ -5,13 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-
-<!--    this only shows up if taken is a param-->
-<!--    param.[string] reads the current html params-->
-<!--    <h3 th:if="${param.taken}">-->
-<!--        Username already taken-->
-<!--    </h3>-->
-
+    <h1 class="warning" th:if="${param.taken}">That username is already in use, please pick another.</h1>
 
     <h1>Sign up for CodeFellowship</h1>
     <form action="/signup" method="post">
