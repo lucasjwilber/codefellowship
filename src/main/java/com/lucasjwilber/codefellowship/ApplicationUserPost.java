@@ -13,6 +13,7 @@ public class ApplicationUserPost {
     @JoinColumn(name="user.id")
     public ApplicationUser user;
 
+    @Column(columnDefinition = "text")
     String body;
     String createdAt;
 
