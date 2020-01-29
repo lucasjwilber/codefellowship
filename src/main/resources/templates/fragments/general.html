@@ -14,10 +14,15 @@
         <nav>
             <p id="greeting">Welcome, [[${username}]]</p>
             <div>
-                <a href="/signup">Sign Up</a>
-                <a href="/login">Log In</a>
-                <a href="/logout">Log Out</a>
-                <a href="/myprofile">My Profile</a>
+                <span th:if="${loggedIn == true}">
+                    <a href="/logout">Log Out</a>
+                    <a href="/myprofile">My Profile</a>
+                </span>
+                <span th:if="${loggedIn == false}">
+                    <a href="/signup">Sign Up</a>
+                    <a href="/login">Log In</a>
+                </span>
+
             </div>
         </nav>
 

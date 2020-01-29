@@ -31,8 +31,10 @@ public class CodeFellowshipController {
     public String getHome(Principal p, Model m) {
         if (p != null) {
             m.addAttribute("username", p.getName());
+            m.addAttribute("loggedIn", true);
         } else {
             m.addAttribute("username", "Visitor");
+            m.addAttribute("loggedIn", false);
         }
         return "homepage";
     }
@@ -41,8 +43,10 @@ public class CodeFellowshipController {
     public String renderSignup(Principal p, Model m) {
         if (p != null) {
             m.addAttribute("username", p.getName());
+            m.addAttribute("loggedIn", true);
         } else {
             m.addAttribute("username", "Visitor");
+            m.addAttribute("loggedIn", false);
         }
         return "signup";
     }
@@ -65,8 +69,10 @@ public class CodeFellowshipController {
     public String renderLogin(Principal p, Model m) {
         if (p != null) {
             m.addAttribute("username", p.getName());
+            m.addAttribute("loggedIn", true);
         } else {
             m.addAttribute("username", "Visitor");
+            m.addAttribute("loggedIn", false);
         }
         return "login";
     }
@@ -77,9 +83,11 @@ public class CodeFellowshipController {
             m.addAttribute("username", p.getName());
             ApplicationUser user = userRepo.findByUsername(p.getName());
             m.addAttribute("user", user);
+            m.addAttribute("loggedIn", true);
             return "profile";
         } else {
             m.addAttribute("username", "Visitor");
+            m.addAttribute("loggedIn", false);
             return "homepage";
         }
     }
