@@ -1,0 +1,16 @@
+form {
+    width: 33%;
+    margin-left: 33%;
+}
+    label {
+        display: block;
+        padding: 10px;
+        margin: 5px;
+    }
+    input, textarea {
+        float: right;
+    }
+    #submitButton {
+        padding: 5px 10px;
+        margin: 20px 100px;
+    }
