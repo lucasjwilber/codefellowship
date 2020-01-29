@@ -40,7 +40,10 @@ public class CodeFellowshipController {
 
     @PostMapping("/signup")
     public RedirectView submitSignup(ApplicationUser user) {
-//        String username, String password, String firstName, String lastName, Date dateOfBirth
+
+        //if findByUsername == null, this stuff, else redirect to /signup/?taken=true, thymeleaf will read that param and
+        //let the h3 "username taken" tag render
+
         user.setPassword(passwordEncoder.encode(user.password));
         userRepo.save(user);
 
