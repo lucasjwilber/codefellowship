@@ -3,9 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
 </head>
 <body>
-    <h1>my profile</h1>
+
+    <div th:replace="fragments/general :: header"></div>
+
+    <h1>Profile</h1>
 
     <h2>Hello [[${user.firstName}]]</h2>
 
@@ -17,8 +23,11 @@
         <input type="submit" />
     </form>
 
-    <div th:each="post : ${user.posts}">
-        <p>[[${post.body}]]</p>
+    <div id="posts" th:each="post : ${user.posts}">
+        <div class="post">
+            <h5>[[${post.createdAt}]]</h5>
+            <p>[[${post.body}]]</p>
+        </div>
     </div>
 
 </body>

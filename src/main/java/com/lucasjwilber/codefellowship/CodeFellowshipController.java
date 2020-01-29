@@ -28,9 +28,9 @@ public class CodeFellowshipController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
-    public String getHome(Authentication auth, Model m) {
-        if (auth != null) {
-            m.addAttribute("username", auth.getName());
+    public String getHome(Principal p, Model m) {
+        if (p != null) {
+            m.addAttribute("username", p.getName());
         } else {
             m.addAttribute("username", "Visitor");
         }
@@ -38,7 +38,12 @@ public class CodeFellowshipController {
     }
 
     @GetMapping("/signup")
-    public String renderSignup() {
+    public String renderSignup(Principal p, Model m) {
+        if (p != null) {
+            m.addAttribute("username", p.getName());
+        } else {
+            m.addAttribute("username", "Visitor");
+        }
         return "signup";
     }
 
@@ -57,12 +62,22 @@ public class CodeFellowshipController {
     }
 
     @GetMapping("/login")
-    public String renderLogin() {
+    public String renderLogin(Principal p, Model m) {
+        if (p != null) {
+            m.addAttribute("username", p.getName());
+        } else {
+            m.addAttribute("username", "Visitor");
+        }
         return "login";
     }
 
     @GetMapping("/myprofile")
     public String renderProfile(Principal p, Model m) {
+        if (p != null) {
+            m.addAttribute("username", p.getName());
+        } else {
+            m.addAttribute("username", "Visitor");
+        }
         ApplicationUser user = userRepo.findByUsername(p.getName());
         m.addAttribute("user", user);
         return "profile";

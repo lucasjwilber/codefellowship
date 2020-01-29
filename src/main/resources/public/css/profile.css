@@ -1,0 +1,27 @@
+h2 {
+    text-align: center;
+}
+form {
+    text-align: center;
+    width: 25%;
+    margin: auto;
+}
+    textarea {
+        width: 100%;
+    }
+
+#posts {
+    width: 50%;
+    margin: auto;
+}
+    .post {
+        max-width: 75%;
+        margin: auto;
+        padding: 1em;
+    }
+        .post p {
+            padding: 1em;
+            border: 1px solid black;
+            background-color: white;
+        }
+

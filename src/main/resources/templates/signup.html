@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/css/signup.css">
 </head>
 <body>
+
+    <div th:replace="fragments/general :: header"></div>
+
     <h1 class="warning" th:if="${param.taken}">That username is already in use, please pick another.</h1>
 
     <h1>Sign up for CodeFellowship</h1>
@@ -27,7 +33,7 @@
         <label>Bio
             <textarea name="bio"></textarea>
             </label>
-        <input type="submit" />
+        <input id="submitButton" type="submit" />
     </form>
 
 </body>
