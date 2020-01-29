@@ -75,12 +75,13 @@ public class CodeFellowshipController {
     public String renderProfile(Principal p, Model m) {
         if (p != null) {
             m.addAttribute("username", p.getName());
+            ApplicationUser user = userRepo.findByUsername(p.getName());
+            m.addAttribute("user", user);
+            return "profile";
         } else {
             m.addAttribute("username", "Visitor");
+            return "homepage";
         }
-        ApplicationUser user = userRepo.findByUsername(p.getName());
-        m.addAttribute("user", user);
-        return "profile";
     }
 
     @PostMapping("/myprofile/{id}/posts/new")
