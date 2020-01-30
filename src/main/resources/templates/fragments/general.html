@@ -14,9 +14,11 @@
         <nav>
             <p id="greeting">Welcome, [[${username}]]</p>
             <div>
-                <span th:if="${loggedIn == true}">
+                <span th:block th:if="${loggedIn == true}">
                     <a href="/logout">Log Out</a>
                     <a href="/myprofile">My Profile</a>
+                    <a href="/feed">My Feed</a>
+                    <a href="/users">Find 'Fellows</a>
                 </span>
                 <span th:if="${loggedIn == false}">
                     <a href="/signup">Sign Up</a>

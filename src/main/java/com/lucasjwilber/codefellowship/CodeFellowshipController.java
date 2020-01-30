@@ -99,7 +99,12 @@ public class CodeFellowshipController {
             ApplicationUserPost post = new ApplicationUserPost(body, user);
             postRepo.save(post);
         }
-
         return new RedirectView("/myprofile");
+    }
+
+    @GetMapping("/users")
+    public String renderUsersPage(Model m) {
+        m.addAttribute("users", userRepo.findAll());
+        return "allUsers";
     }
 }

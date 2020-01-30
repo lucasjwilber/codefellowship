@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>CodeFellowship Users:</h1>
+
+    <div th:each="user : ${users}">
+        <div class="user">
+            <p>[[${user.username}]]</p>
+            <p>[[${user.firstName}]] [[${user.lastName}]]</p>
+            <img src="imageurl" />
+            <p>[[${user.bio}]]</p>
+        </div>
+    </div>
+
+</body>
+</html>
