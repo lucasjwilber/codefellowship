@@ -4,9 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class ApplicationUser implements UserDetails {
@@ -16,6 +14,18 @@ public class ApplicationUser implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     public List<ApplicationUserPost> posts;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_and_followers",
+            joinColumns = { @JoinColumn(name = "follower_id") },
+            inverseJoinColumns = { @JoinColumn(name = "followee_id") }
+    )
+    public Set<ApplicationUser> UsersThisUserFollows;
+
+    @ManyToMany(mappedBy = "UsersThisUserFollows")
+    public Set<ApplicationUser> UsersFollowingThisUser;
 
     String username;
     String password;
@@ -102,4 +112,14 @@ public class ApplicationUser implements UserDetails {
     public void setBio(String bio) {
         this.bio = bio;
     }
+
+    public List<ApplicationUserPost> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<ApplicationUserPost> posts) {
+        this.posts = posts;
+    }
+
+
 }

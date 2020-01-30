@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+</head>
+<body>
+    <h1>CodeFellowship Users:</h1>
+
+    <div th:each="user : ${users}">
+        <form class="user" th:action="${'/users/' + user.id + '/follow'}" method="post">
+            <p>[[${user.username}]]</p>
+            <p>[[${user.firstName}]] [[${user.lastName}]]</p>
+            <img src="imageurl" />
+            <p>[[${user.bio}]]</p>
+            <input type="submit" value="Follow" />
+        </form>
+    </div>
+
+</body>
+</html>
