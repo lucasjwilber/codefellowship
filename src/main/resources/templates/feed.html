@@ -10,8 +10,8 @@
 
     <div id="posts" th:each="post : ${posts}">
         <div class="post">
-            <h5>[[${post.createdBy}]]</h5>
-            <p>[[${post.post}]]</p>
+            <h5>[[${post.username}]]</h5>
+            <p>[[${post.body}]]</p>
         </div>
     </div>
 

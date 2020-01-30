@@ -112,14 +112,10 @@ public class ApplicationUser implements UserDetails {
     public void setBio(String bio) {
         this.bio = bio;
     }
-
     public List<ApplicationUserPost> getPosts() {
         return posts;
     }
-
     public void setPosts(List<ApplicationUserPost> posts) {
         this.posts = posts;
     }
-
-
 }

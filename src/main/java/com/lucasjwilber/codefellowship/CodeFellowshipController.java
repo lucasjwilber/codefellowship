@@ -123,11 +123,11 @@ public class CodeFellowshipController {
     }
 
     public static class UserPost {
-        String createdBy;
-        String post;
-        UserPost(String createdBy, String post) {
-            this.createdBy = createdBy;
-            this.post = post;
+        public String username;
+        public String body;
+        UserPost(String username, String body) {
+            this.username = username;
+            this.body = body;
         }
     }
     @GetMapping("/feed")
@@ -135,17 +135,18 @@ public class CodeFellowshipController {
         ApplicationUser currentUser = userRepo.findByUsername(p.getName());
         Set<ApplicationUser> followedUsers = currentUser.UsersThisUserFollows;
 
-        ArrayList<UserPost> posts = new ArrayList<>();
+        ArrayList<UserPost> allPosts = new ArrayList<>();
 
         for (ApplicationUser user : followedUsers) {
             System.out.println(user.username);
             System.out.println(user.posts);
             for (ApplicationUserPost post : user.posts) {
-                posts.add(new UserPost(user.username, post.body));
+                System.out.println(post.body);
+                allPosts.add(new UserPost(user.username, post.body));
             }
         }
         //posts is a list of objects with username and post properties
-        m.addAttribute("posts", posts);
+        m.addAttribute("posts", allPosts);
         return "feed";
     }
 }
