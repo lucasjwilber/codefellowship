@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,9 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 public class CodeFellowshipController {
@@ -111,15 +115,37 @@ public class CodeFellowshipController {
 
     @PostMapping("/users/{id}/follow")
     public RedirectView followUser(@PathVariable long id, Principal p) {
-        System.out.println("1");
         ApplicationUser selectedUser = userRepo.getOne(id);
-        System.out.println("2");
         ApplicationUser currentUser = userRepo.findByUsername(p.getName());
-        System.out.println("3");
         currentUser.UsersThisUserFollows.add(selectedUser);
-        System.out.println("4");
         userRepo.save(currentUser);
-        System.out.println("5");
         return new RedirectView("/users");
+    }
+
+    public static class UserPost {
+        String createdBy;
+        String post;
+        UserPost(String createdBy, String post) {
+            this.createdBy = createdBy;
+            this.post = post;
+        }
+    }
+    @GetMapping("/feed")
+    public String getFeed(Principal p, Model m) {
+        ApplicationUser currentUser = userRepo.findByUsername(p.getName());
+        Set<ApplicationUser> followedUsers = currentUser.UsersThisUserFollows;
+
+        ArrayList<UserPost> posts = new ArrayList<>();
+
+        for (ApplicationUser user : followedUsers) {
+            System.out.println(user.username);
+            System.out.println(user.posts);
+            for (ApplicationUserPost post : user.posts) {
+                posts.add(new UserPost(user.username, post.body));
+            }
+        }
+        //posts is a list of objects with username and post properties
+        m.addAttribute("posts", posts);
+        return "feed";
     }
 }
