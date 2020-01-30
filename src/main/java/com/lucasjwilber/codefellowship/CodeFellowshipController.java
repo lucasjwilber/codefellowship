@@ -63,7 +63,7 @@ public class CodeFellowshipController {
             //autologin on signup:
             Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            return new RedirectView("/myprofile?new=true");
+            return new RedirectView("/myprofile/?new=true");
         } else {
             return new RedirectView("/signup?taken=true");
         }
@@ -88,7 +88,7 @@ public class CodeFellowshipController {
             ApplicationUser user = userRepo.findByUsername(p.getName());
             m.addAttribute("user", user);
             m.addAttribute("loggedIn", true);
-            return "profile";
+            return "myprofile";
         } else {
             m.addAttribute("username", "Visitor");
             m.addAttribute("loggedIn", false);
@@ -96,7 +96,7 @@ public class CodeFellowshipController {
         }
     }
 
-    @PostMapping("/myprofile/{id}/posts/new")
+    @PostMapping("/users/{id}/posts/new")
     public RedirectView newPost(@PathVariable long id, Principal p, String body) {
         ApplicationUser user = userRepo.findByUsername(p.getName());
         if (user.id == id) {
@@ -108,30 +108,51 @@ public class CodeFellowshipController {
 
     @GetMapping("/users")
     public String renderUsersPage(Model m, Principal p) {
+        if (p != null) {
+            m.addAttribute("username", p.getName());
+            m.addAttribute("loggedIn", true);
+        } else {
+            m.addAttribute("username", "Visitor");
+            m.addAttribute("loggedIn", false);
+        }
         //add check for users that are already being followed
         m.addAttribute("users", userRepo.findAll());
+        m.addAttribute("currentUserName", p.getName());
         return "allUsers";
     }
 
     @PostMapping("/users/{id}/follow")
     public RedirectView followUser(@PathVariable long id, Principal p) {
         ApplicationUser selectedUser = userRepo.getOne(id);
-        ApplicationUser currentUser = userRepo.findByUsername(p.getName());
-        currentUser.UsersThisUserFollows.add(selectedUser);
-        userRepo.save(currentUser);
+
+        if (!selectedUser.username.equals(p.getName())) {
+            ApplicationUser currentUser = userRepo.findByUsername(p.getName());
+            currentUser.UsersThisUserFollows.add(selectedUser);
+            userRepo.save(currentUser);
+        }
         return new RedirectView("/users");
     }
 
     public static class UserPost {
         public String username;
         public String body;
-        UserPost(String username, String body) {
+        public long userId;
+        UserPost(String username, String body, long userId) {
             this.username = username;
             this.body = body;
+            this.userId = userId;
         }
     }
     @GetMapping("/feed")
     public String getFeed(Principal p, Model m) {
+        if (p != null) {
+            m.addAttribute("username", p.getName());
+            m.addAttribute("loggedIn", true);
+        } else {
+            m.addAttribute("username", "Visitor");
+            m.addAttribute("loggedIn", false);
+        }
+
         ApplicationUser currentUser = userRepo.findByUsername(p.getName());
         Set<ApplicationUser> followedUsers = currentUser.UsersThisUserFollows;
 
@@ -142,11 +163,28 @@ public class CodeFellowshipController {
             System.out.println(user.posts);
             for (ApplicationUserPost post : user.posts) {
                 System.out.println(post.body);
-                allPosts.add(new UserPost(user.username, post.body));
+                allPosts.add(new UserPost(user.username, post.body, user.id));
             }
         }
         //posts is a list of objects with username and post properties
         m.addAttribute("posts", allPosts);
         return "feed";
+    }
+
+    @GetMapping("/users/{id}")
+    public String renderProfile(@PathVariable Long id, Principal p, Model m) {
+        if (p != null) {
+            m.addAttribute("username", p.getName());
+            ApplicationUser user = userRepo.getOne(id);
+            m.addAttribute("user", user);
+            m.addAttribute("loggedIn", true);
+            return "userprofile";
+        } else {
+            m.addAttribute("username", "Visitor");
+            m.addAttribute("loggedIn", false);
+            return "homepage";
+        }
+
+
     }
 }

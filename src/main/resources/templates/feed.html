@@ -3,14 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
 </head>
 <body>
+
+    <div th:replace="fragments/general :: header"></div>
 
     <h1>Your Feed</h1>
 
     <div id="posts" th:each="post : ${posts}">
         <div class="post">
-            <h5>[[${post.username}]]</h5>
+            <a th:href="${'/users/' + post.userId}"><h5>[[${post.username}]]</h5></a>
             <p>[[${post.body}]]</p>
         </div>
     </div>
