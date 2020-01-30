@@ -8,12 +8,13 @@
     <h1>CodeFellowship Users:</h1>
 
     <div th:each="user : ${users}">
-        <div class="user">
+        <form class="user" th:action="${'/users/' + user.id + '/follow'}" method="post">
             <p>[[${user.username}]]</p>
             <p>[[${user.firstName}]] [[${user.lastName}]]</p>
             <img src="imageurl" />
             <p>[[${user.bio}]]</p>
-        </div>
+            <input type="submit" value="Follow" />
+        </form>
     </div>
 
 </body>

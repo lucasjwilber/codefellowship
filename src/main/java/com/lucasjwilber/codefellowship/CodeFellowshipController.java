@@ -103,8 +103,23 @@ public class CodeFellowshipController {
     }
 
     @GetMapping("/users")
-    public String renderUsersPage(Model m) {
+    public String renderUsersPage(Model m, Principal p) {
+        //add check for users that are already being followed
         m.addAttribute("users", userRepo.findAll());
         return "allUsers";
+    }
+
+    @PostMapping("/users/{id}/follow")
+    public RedirectView followUser(@PathVariable long id, Principal p) {
+        System.out.println("1");
+        ApplicationUser selectedUser = userRepo.getOne(id);
+        System.out.println("2");
+        ApplicationUser currentUser = userRepo.findByUsername(p.getName());
+        System.out.println("3");
+        currentUser.UsersThisUserFollows.add(selectedUser);
+        System.out.println("4");
+        userRepo.save(currentUser);
+        System.out.println("5");
+        return new RedirectView("/users");
     }
 }
