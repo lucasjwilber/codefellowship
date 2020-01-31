@@ -11,12 +11,15 @@
 
     <div th:replace="fragments/general :: header"></div>
 
-    <h1>Your Feed</h1>
+    <h2 th:if="${noFollowers}">It looks like you're not currently following anyone. Click
+        <a href="/users/">here</a> to find your friends!</h2>
+    <h1 th:unless="${noFollowers}">Your Feed</h1>
 
     <div id="posts" th:each="post : ${posts}">
         <div class="post">
             <a th:href="${'/users/' + post.userId}"><h5>[[${post.username}]]</h5></a>
             <p>[[${post.body}]]</p>
+            <h6>[[${post.createdAt}]]</h6>
         </div>
     </div>
 

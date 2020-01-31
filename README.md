@@ -1,6 +1,7 @@
 # CodeFellowship
 
-This app allows students at Code Fellows to connect with each other and support each other on their coding joureys. Students can register on the app, which creates for them a profile where they can add posts, and grants them access to view other user's profiles.
+This app allows students at Code Fellows to connect with each other and support each other on their coding joureys. It uses Spring Security to authenticate users.
+If a user is not logged in they only have the options to login or sign up. If they are logged in, they can add posts to their profile, find other users, view user profiles, follow other users, and view the posts of all the users they are following on a personal feed page.
 
 
 To run this app:

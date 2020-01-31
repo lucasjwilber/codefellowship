@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
 </head>
 <body>
     <div th:replace="fragments/general :: header"></div>
 
-    <h1 th:text="${user.username}"></h1>
+    <h1 th:text="${user.username}">username</h1>
+    <h2>[[${user.firstName}]] [[${user.lastName}]]</h2>
+    <img class="profileImage" src="/images/usericon.png" />
+    <p>[[${user.bio}]]</p>
 
+    <h1>Posts</h1>
     <div id="posts" th:each="post : ${user.posts}">
         <div class="post">
             <h5>[[${post.createdAt}]]</h5>

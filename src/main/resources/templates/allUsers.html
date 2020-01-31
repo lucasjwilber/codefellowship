@@ -5,6 +5,7 @@
     <title>Title</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/css/users.css">
 </head>
 <body>
 
@@ -14,12 +15,15 @@
 
     <div th:each="user : ${users}">
         <form th:unless="${user.username == currentUserName}"
-              class="user" th:action="${'/users/' + user.id + '/follow'}" method="post">
-            <a th:href="${'/users/' + user.id}" />[[${user.username}]]</a>
+              class="user"
+              th:action="${'/users/' + user.id + '/follow'}"
+              method="post">
+            <a th:href="${'/users/' + user.id}">[[${user.username}]]</a>
             <p>[[${user.firstName}]] [[${user.lastName}]]</p>
-            <img src="imageurl" />
+            <img src="/images/usericon.png" />
             <p>[[${user.bio}]]</p>
-            <input type="submit" value="Follow" />
+            <input th:if="${followedUsers.contains(user)}" type="submit" value="Following" disabled />
+            <input th:unless="${followedUsers.contains(user)}" type="submit" value="Follow" />
         </form>
     </div>
 

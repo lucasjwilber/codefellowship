@@ -1,0 +1,9 @@
+.user {
+    width: 33%;
+    margin: auto;
+    padding: 1em;
+    border: 1px solid black;
+    background-color: white;
+    margin-bottom: 1em;
+    text-align: center;
+}

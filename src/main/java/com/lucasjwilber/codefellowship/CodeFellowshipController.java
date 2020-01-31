@@ -111,25 +111,23 @@ public class CodeFellowshipController {
         if (p != null) {
             m.addAttribute("username", p.getName());
             m.addAttribute("loggedIn", true);
+            m.addAttribute("users", userRepo.findAll());
+            m.addAttribute("followedUsers", userRepo.findByUsername(p.getName()).UsersThisUserFollows);
+            m.addAttribute("currentUserName", p.getName());
+            return "allUsers";
         } else {
             m.addAttribute("username", "Visitor");
             m.addAttribute("loggedIn", false);
+            return "homepage";
         }
-        //add check for users that are already being followed
-        m.addAttribute("users", userRepo.findAll());
-        m.addAttribute("currentUserName", p.getName());
-        return "allUsers";
     }
 
     @PostMapping("/users/{id}/follow")
     public RedirectView followUser(@PathVariable long id, Principal p) {
         ApplicationUser selectedUser = userRepo.getOne(id);
-
-        if (!selectedUser.username.equals(p.getName())) {
-            ApplicationUser currentUser = userRepo.findByUsername(p.getName());
-            currentUser.UsersThisUserFollows.add(selectedUser);
-            userRepo.save(currentUser);
-        }
+        ApplicationUser currentUser = userRepo.findByUsername(p.getName());
+        currentUser.UsersThisUserFollows.add(selectedUser);
+        userRepo.save(currentUser);
         return new RedirectView("/users");
     }
 
@@ -137,10 +135,12 @@ public class CodeFellowshipController {
         public String username;
         public String body;
         public long userId;
-        UserPost(String username, String body, long userId) {
+        public String createdAt;
+        UserPost(String username, String body, long userId, String createdAt) {
             this.username = username;
             this.body = body;
             this.userId = userId;
+            this.createdAt = createdAt;
         }
     }
     @GetMapping("/feed")
@@ -148,27 +148,30 @@ public class CodeFellowshipController {
         if (p != null) {
             m.addAttribute("username", p.getName());
             m.addAttribute("loggedIn", true);
+
+            ApplicationUser currentUser = userRepo.findByUsername(p.getName());
+            Set<ApplicationUser> followedUsers = currentUser.UsersThisUserFollows;
+
+            if (followedUsers.size() == 0) {
+                m.addAttribute("noFollowers", true);
+            } else {
+                m.addAttribute("noFollowers", false);
+                ArrayList<UserPost> allPosts = new ArrayList<>();
+
+                for (ApplicationUser user : followedUsers) {
+                    for (ApplicationUserPost post : user.posts) {
+                        allPosts.add(new UserPost(user.username, post.body, user.id, post.createdAt));
+                    }
+                }
+                //posts is a list of objects with username and post properties
+                m.addAttribute("posts", allPosts);
+            }
+            return "feed";
         } else {
             m.addAttribute("username", "Visitor");
             m.addAttribute("loggedIn", false);
+            return "homepage";
         }
-
-        ApplicationUser currentUser = userRepo.findByUsername(p.getName());
-        Set<ApplicationUser> followedUsers = currentUser.UsersThisUserFollows;
-
-        ArrayList<UserPost> allPosts = new ArrayList<>();
-
-        for (ApplicationUser user : followedUsers) {
-            System.out.println(user.username);
-            System.out.println(user.posts);
-            for (ApplicationUserPost post : user.posts) {
-                System.out.println(post.body);
-                allPosts.add(new UserPost(user.username, post.body, user.id));
-            }
-        }
-        //posts is a list of objects with username and post properties
-        m.addAttribute("posts", allPosts);
-        return "feed";
     }
 
     @GetMapping("/users/{id}")
