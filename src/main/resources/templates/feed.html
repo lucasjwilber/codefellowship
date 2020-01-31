@@ -3,15 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/css/profile.css">
 </head>
 <body>
 
-    <h1>Your Feed</h1>
+    <div th:replace="fragments/general :: header"></div>
+
+    <h2 th:if="${noFollowers}">It looks like you're not currently following anyone. Click
+        <a href="/users/">here</a> to find your friends!</h2>
+    <h1 th:unless="${noFollowers}">Your Feed</h1>
 
     <div id="posts" th:each="post : ${posts}">
         <div class="post">
-            <h5>[[${post.createdBy}]]</h5>
-            <p>[[${post.post}]]</p>
+            <a th:href="${'/users/' + post.userId}"><h5>[[${post.username}]]</h5></a>
+            <p>[[${post.body}]]</p>
+            <h6>[[${post.createdAt}]]</h6>
         </div>
     </div>
 

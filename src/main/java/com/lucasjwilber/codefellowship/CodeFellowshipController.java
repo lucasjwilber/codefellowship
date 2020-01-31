@@ -63,7 +63,7 @@ public class CodeFellowshipController {
             //autologin on signup:
             Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            return new RedirectView("/myprofile?new=true");
+            return new RedirectView("/myprofile/?new=true");
         } else {
             return new RedirectView("/signup?taken=true");
         }
@@ -88,7 +88,7 @@ public class CodeFellowshipController {
             ApplicationUser user = userRepo.findByUsername(p.getName());
             m.addAttribute("user", user);
             m.addAttribute("loggedIn", true);
-            return "profile";
+            return "myprofile";
         } else {
             m.addAttribute("username", "Visitor");
             m.addAttribute("loggedIn", false);
@@ -96,7 +96,7 @@ public class CodeFellowshipController {
         }
     }
 
-    @PostMapping("/myprofile/{id}/posts/new")
+    @PostMapping("/users/{id}/posts/new")
     public RedirectView newPost(@PathVariable long id, Principal p, String body) {
         ApplicationUser user = userRepo.findByUsername(p.getName());
         if (user.id == id) {
@@ -108,9 +108,18 @@ public class CodeFellowshipController {
 
     @GetMapping("/users")
     public String renderUsersPage(Model m, Principal p) {
-        //add check for users that are already being followed
-        m.addAttribute("users", userRepo.findAll());
-        return "allUsers";
+        if (p != null) {
+            m.addAttribute("username", p.getName());
+            m.addAttribute("loggedIn", true);
+            m.addAttribute("users", userRepo.findAll());
+            m.addAttribute("followedUsers", userRepo.findByUsername(p.getName()).UsersThisUserFollows);
+            m.addAttribute("currentUserName", p.getName());
+            return "allUsers";
+        } else {
+            m.addAttribute("username", "Visitor");
+            m.addAttribute("loggedIn", false);
+            return "homepage";
+        }
     }
 
     @PostMapping("/users/{id}/follow")
@@ -123,29 +132,62 @@ public class CodeFellowshipController {
     }
 
     public static class UserPost {
-        String createdBy;
-        String post;
-        UserPost(String createdBy, String post) {
-            this.createdBy = createdBy;
-            this.post = post;
+        public String username;
+        public String body;
+        public long userId;
+        public String createdAt;
+        UserPost(String username, String body, long userId, String createdAt) {
+            this.username = username;
+            this.body = body;
+            this.userId = userId;
+            this.createdAt = createdAt;
         }
     }
     @GetMapping("/feed")
     public String getFeed(Principal p, Model m) {
-        ApplicationUser currentUser = userRepo.findByUsername(p.getName());
-        Set<ApplicationUser> followedUsers = currentUser.UsersThisUserFollows;
+        if (p != null) {
+            m.addAttribute("username", p.getName());
+            m.addAttribute("loggedIn", true);
 
-        ArrayList<UserPost> posts = new ArrayList<>();
+            ApplicationUser currentUser = userRepo.findByUsername(p.getName());
+            Set<ApplicationUser> followedUsers = currentUser.UsersThisUserFollows;
 
-        for (ApplicationUser user : followedUsers) {
-            System.out.println(user.username);
-            System.out.println(user.posts);
-            for (ApplicationUserPost post : user.posts) {
-                posts.add(new UserPost(user.username, post.body));
+            if (followedUsers.size() == 0) {
+                m.addAttribute("noFollowers", true);
+            } else {
+                m.addAttribute("noFollowers", false);
+                ArrayList<UserPost> allPosts = new ArrayList<>();
+
+                for (ApplicationUser user : followedUsers) {
+                    for (ApplicationUserPost post : user.posts) {
+                        allPosts.add(new UserPost(user.username, post.body, user.id, post.createdAt));
+                    }
+                }
+                //posts is a list of objects with username and post properties
+                m.addAttribute("posts", allPosts);
             }
+            return "feed";
+        } else {
+            m.addAttribute("username", "Visitor");
+            m.addAttribute("loggedIn", false);
+            return "homepage";
         }
-        //posts is a list of objects with username and post properties
-        m.addAttribute("posts", posts);
-        return "feed";
+    }
+
+    @GetMapping("/users/{id}")
+    public String renderProfile(@PathVariable Long id, Principal p, Model m) {
+        if (p != null) {
+            m.addAttribute("username", p.getName());
+            ApplicationUser user = userRepo.getOne(id);
+            m.addAttribute("user", user);
+            m.addAttribute("loggedIn", true);
+            return "userprofile";
+        } else {
+            m.addAttribute("username", "Visitor");
+            m.addAttribute("loggedIn", false);
+            return "homepage";
+        }
+
+
     }
 }

@@ -3,26 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/css/base.css">
     <link rel="stylesheet" type="text/css" href="/css/profile.css">
 </head>
 <body>
-
     <div th:replace="fragments/general :: header"></div>
 
-    <h1>Profile</h1>
+    <h1 th:text="${user.username}">username</h1>
+    <h2>[[${user.firstName}]] [[${user.lastName}]]</h2>
+    <img class="profileImage" src="/images/usericon.png" />
+    <p>[[${user.bio}]]</p>
 
-    <h2>Hello [[${user.firstName}]]</h2>
-
-    <h3 th:if="${param.new}">Welcome to CodeFellowship!</h3>
-
-    <form th:action="${'/myprofile/' + user.id + '/posts/new'}" method="post">
-        <h3>New Post</h3>
-        <textarea name="body"></textarea>
-        <input type="submit" />
-    </form>
-
+    <h1>Posts</h1>
     <div id="posts" th:each="post : ${user.posts}">
         <div class="post">
             <h5>[[${post.createdAt}]]</h5>
